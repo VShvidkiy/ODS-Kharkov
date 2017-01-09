@@ -95,7 +95,13 @@
               $scope.tel = $scope.contactbook[id].tel;
             }
             $scope.deletePerson = function( id ) {
-              $scope.contactbook.splice( id, 1 );
+                var pass = prompt("Введите пароль удаления");
+                if(pass==="fttbnks@mail.ru"){
+                    $scope.contactbook.splice( id, 1 );
+                }
+                else {
+                    alert("Удалить запись может только администратор!!!");
+                } 
             }
           })
 
