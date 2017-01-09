@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,88 +18,29 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     
-   
-  </head>
-  <body>
-  
-    <div class="container">
-      <div ng-app="app" ng-controller="contactbookCtrl">
-  
-        <form>
-            <div class="row" id="value">
-                <div class="col-md-3 col-sm-12">
-                    <label class="">Район</label>
-                    <input type="text" ng-model="area" />
-                </div>
-                <div class="col-md-3 col-sm-12">
-                    <label class="">Улица</label>
-                    <input type="text" ng-model="street" />
-                </div>
-                <div class="col-md-3 col-sm-12">
-                    <label class="">№ дома</label>
-                    <input type="text" ng-model="dom" />
-                </div>
-                <div class="col-md-3 col-sm-12">
-                    <label class="">Телефон</label>
-                    <input type="text" ng-model="tel" />
-                </div>
-            </div>    
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-success center" ng-click="addNewPerson()" ng-hide="currentPersonId > -1">Добавить</button>
-                    <button class="btn btn-warning center" ng-click="savePerson()" ng-show="currentPersonId > -1">Сохранить</button>
-                </div>
-            </div>
-        </form>
-        <div class="table-responsive"> 
-        <table id="contactbook" class="table-hover">
-        <thead>
-            <tr class="mainitem">
-                <th>№</th>
-                <th>Район</th>
-                <th>Улица</th>
-                <th>№ дома</th>
-                <th>Телефон</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="contact in contactbook" class="item">
-                <td>{{ $index + 1 }}</td>
-                <td>{{ contact.area }}</td>
-                <td>{{ contact.street }}</td>
-                <td>{{ contact.dom }}</td>
-                <td>{{ contact.tel }}</td>
-                <td>
-                        <button class="btn btn-success btn-sm" ng-click="editPerson($index)">ред-ть</button>
-                        <button class="btn btn-danger btn-sm" ng-click="deletePerson($index)">удалить</button>
-                </td>
-            </tr>
-        </tbody>
-        </table>
-        </div>
-</div>
-      
-        
-    </div><!--container-->
-    
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
-     <script>
+    <script>
      
         var app = angular.module( 'app', [ ] )
           .controller('contactbookCtrl', function( $scope,$http ){
             $scope.currentPersonId = -1;
-            $scope.contactbook = [
-              {
-                area: 'Алексеевка',
-                street: 'пр.Победы',
-                dom: '64а',
-                tel: '(057)337-85-62'
-              }
-            ];
+            // $scope.contactbook = [
+            //   {
+            //     area: 'Алексеевка',
+            //     street: 'пр.Победы',
+            //     dom: '64а',
+            //     tel: '(057)337-85-62'
+            //   }
+            // ];
+                $http.get("ajax.php")
+                     .then(
+                    function(response){
+                        $scope.contactbook = response.data;
+                      console.log(data);  
+                    },
+                    function(response){
+
+                    }
+                );
             $scope.addNewPerson = function() {
               if ( $scope.area != '' ) {
                 $scope.contactbook.push({
@@ -108,7 +49,7 @@
                   dom: $scope.dom,
                   tel: $scope.tel
                 });
-                
+            
                 $http.post('insert.php', {
                   area: $scope.area,
                   street: $scope.street,
@@ -123,11 +64,20 @@
 
                     }
                 );
-                
+                // .success(function(data, status, headers, config) {
+                //     console.log(data);
+                // });
+                // error(function(data, status, headers, config) {
+                //     alert( "None: " + JSON.stringify({data: data}));
+                // });
+
                 $scope.area = '';
                 $scope.street = '';
                 $scope.dom = '';
                 $scope.tel = '';
+              }
+              else{
+                alert("No data");
               }
             }
             $scope.savePerson = function() {
@@ -157,6 +107,74 @@
           })
 
     </script>
+  </head>
+  <body>
+  
+    <div class="container-fluide">
+      <div ng-app="app" ng-controller="contactbookCtrl">
+        <h1>Список диспетчерских служб(ОДС) города Харьков.</h1>
+        <form>
+            <div class="row" id="value">
+                <div class="col-md-3 col-sm-6">
+                    <label class="data">Район</label>
+                    <input type="text" size="26" ng-model="area" placeholder="Шевченковский" />
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <label class="data">Улица</label>
+                    <input type="text" size="26" ng-model="street" placeholder="проспект Победы" />
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <label class="data">№ дома</label>
+                    <input type="text" size="26" ng-model="dom" placeholder="50а" />
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <label class="data">Телефон</label>
+                    <input type="text" size="26" ng-model="tel" placeholder="(057)775-25-45" />
+                </div>
+            </div>    
+            <div class="row start">
+                <div class="col-md-12">
+                    <button class="btn btn-success center btn-lg" ng-click="addNewPerson()" ng-hide="currentPersonId > -1">Добавить</button>
+                    <button class="btn btn-warning center btn-lg" ng-click="savePerson()" ng-show="currentPersonId > -1">Сохранить</button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive"> 
+        <table id="contactbook" class="table-hover">
+        <thead>
+            <tr class="mainitem">
+                <th>№</th>
+                <th>Район</th>
+                <th>Улица</th>
+                <th>№ дома</th>
+                <th>Телефон</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="contact in contactbook" class="item">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ contact.area }}</td>
+                <td>{{ contact.street }}</td>
+                <td>{{ contact.dom }}</td>
+                <td>{{ contact.tel }}</td>
+                <td>
+                        <button class="btn btn-success" ng-click="editPerson($index)">ред-ть</button>
+                        <button class="btn btn-danger" ng-click="deletePerson($index)">удалить</button>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        </div>
+</div>
+      
+        
+    </div><!--container-->
+    
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script>
     
     
   </body>
